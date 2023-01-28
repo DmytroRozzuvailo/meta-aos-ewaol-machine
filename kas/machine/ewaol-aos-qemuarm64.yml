@@ -1,0 +1,60 @@
+header:
+  version: 11
+  includes:
+    - repo: meta-ewaol
+      file: meta-ewaol-config/kas/include/arm-machines.yml
+
+machine: ewaol-aos-qemuarm64
+
+repos:
+  meta-arm:
+    url: https://git.yoctoproject.org/git/meta-arm
+    path: layers/meta-arm
+    layers:
+      meta-arm: included
+      meta-arm-toolchain: included
+
+  meta-aos-ewaol:
+    url: https://github.com/DmytroRozzuvailo/meta-aos-ewaol
+    refspec: kirkstone
+    path: layers/meta-aos-ewaol
+    layers:
+      meta-aos-ewaol:
+
+  meta-openembedded:
+    url: https://git.openembedded.org/meta-openembedded
+    refspec: kirkstone
+    path: layers/meta-openembedded
+    layers:
+      meta-initramfs:
+      meta-perl:
+
+  meta-clang:
+     url: https://github.com/kraj/meta-clang
+     refspec: kirkstone
+     path: layers/meta-clang
+
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    refspec: kirkstone
+    path: layers/poky
+    layers:
+      meta:
+      meta-poky:
+    patches:
+      p1:
+        repo : poky
+        path : ../../patches/0001-wic-add-UEFI-kernel-as-UEFI-stub.patch
+      p2:
+        repo : poky
+        path : ../../patches/0002-wic-bootimg-efi-implement-include-path.patch
+      p3:
+        repo : poky
+        path : ../../patches/0001-bootimg-efi.py-fix-cls.patch
+
+local_conf_header:
+  base: |
+    WKS_FILE="ewaol-aos.wks.in"
+
+target:
+  - ewaol-aos-vm-image
